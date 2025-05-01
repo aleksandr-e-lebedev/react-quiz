@@ -34,6 +34,15 @@ body {
 .app {
   min-height: 100vh;
   padding: 3.2rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rem;
+}
+
+.app__main {
+  width: 50rem;
 }
 
 /*
