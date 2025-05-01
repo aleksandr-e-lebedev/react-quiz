@@ -1,0 +1,16 @@
+.app__header {
+  width: 66rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app__logo {
+  width: 14rem;
+}
+
+.app__title {
+  font-family: "Codystar";
+  font-size: 5.6rem;
+}
