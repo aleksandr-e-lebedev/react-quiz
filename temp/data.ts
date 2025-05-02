@@ -137,4 +137,7 @@ export const tempQuestions = [
     correctOption: 3,
     points: 20,
   },
-];
+].map((question) => ({
+  id: crypto.randomUUID(),
+  ...question,
+}));

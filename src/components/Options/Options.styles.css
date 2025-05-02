@@ -1,0 +1,32 @@
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.options__option {
+  width: 100%;
+  text-align: left;
+}
+
+.options__option:not([disabled]):hover {
+  transform: translateX(1.2rem);
+}
+
+.options__option_correct {
+  border: 2px solid var(--color-theme);
+
+  color: var(--color-light);
+  background-color: var(--color-theme);
+}
+
+.options__option_wrong {
+  border: 2px solid var(--color-accent);
+
+  color: var(--color-darkest);
+  background-color: var(--color-accent);
+}
+
+.options__answer {
+  transform: translateX(2rem);
+}
