@@ -18,6 +18,7 @@ export default function App() {
   const isActive = true;
 
   const numQuestions = questions.length;
+  const currentQuestion = questions[currentQuestionIndex];
 
   const maxPoints = questions.reduce(
     (acc, question) => acc + question.points,
@@ -25,6 +26,10 @@ export default function App() {
   );
 
   function handleStartQuiz() {
+    return;
+  }
+
+  function handleChooseAnswer() {
     return;
   }
 
@@ -42,11 +47,13 @@ export default function App() {
         )}
         {isActive && (
           <QuizScreen
+            question={currentQuestion}
             answer={answer}
             currentQuestionIndex={currentQuestionIndex}
             numQuestions={numQuestions}
             points={points}
             maxPoints={maxPoints}
+            onChooseAnswer={handleChooseAnswer}
           />
         )}
       </main>
