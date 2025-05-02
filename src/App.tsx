@@ -8,6 +8,9 @@ import { tempQuestions } from "../temp/data";
 
 export default function App() {
   const questions = tempQuestions;
+  const currentQuestionIndex = 0;
+  const answer = 1;
+  const points = 10;
 
   const isLoading = false;
   const isFailed = false;
@@ -15,6 +18,11 @@ export default function App() {
   const isActive = true;
 
   const numQuestions = questions.length;
+
+  const maxPoints = questions.reduce(
+    (acc, question) => acc + question.points,
+    0
+  );
 
   function handleStartQuiz() {
     return;
@@ -32,7 +40,15 @@ export default function App() {
             onStartQuiz={handleStartQuiz}
           />
         )}
-        {isActive && <QuizScreen />}
+        {isActive && (
+          <QuizScreen
+            answer={answer}
+            currentQuestionIndex={currentQuestionIndex}
+            numQuestions={numQuestions}
+            points={points}
+            maxPoints={maxPoints}
+          />
+        )}
       </main>
     </div>
   );
