@@ -2,6 +2,7 @@ import Header from "./components/Header";
 import Loader from "./components/Loader";
 import ErrorMessage from "./components/ErrorMessage";
 import StartScreen from "./components/StartScreen";
+import QuizScreen from "./components/QuizScreen";
 
 import { tempQuestions } from "../temp/data";
 
@@ -10,7 +11,8 @@ export default function App() {
 
   const isLoading = false;
   const isFailed = false;
-  const isReady = true;
+  const isReady = false;
+  const isActive = true;
 
   const numQuestions = questions.length;
 
@@ -30,6 +32,7 @@ export default function App() {
             onStartQuiz={handleStartQuiz}
           />
         )}
+        {isActive && <QuizScreen />}
       </main>
     </div>
   );
