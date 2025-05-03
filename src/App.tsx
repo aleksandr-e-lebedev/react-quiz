@@ -3,6 +3,7 @@ import Loader from "./components/Loader";
 import ErrorMessage from "./components/ErrorMessage";
 import StartScreen from "./components/StartScreen";
 import QuizScreen from "./components/QuizScreen";
+import FinishScreen from "./components/FinishScreen";
 
 import { SECONDS_PER_QUESTION } from "./config";
 import { tempQuestions } from "../temp/data";
@@ -12,12 +13,14 @@ export default function App() {
   const currentQuestionIndex = 0;
   const answer = 1;
   const points = 10;
+  const highscore = 0;
   const secondsRemaining = questions.length * SECONDS_PER_QUESTION;
 
   const isLoading = false;
   const isFailed = false;
   const isReady = false;
-  const isActive = true;
+  const isActive = false;
+  const isFinished = true;
 
   const numQuestions = questions.length;
   const currentQuestion = questions[currentQuestionIndex];
@@ -49,6 +52,10 @@ export default function App() {
     return;
   }
 
+  function handleRestartQuiz() {
+    return;
+  }
+
   return (
     <div className="app">
       <Header />
@@ -76,6 +83,14 @@ export default function App() {
             isLastQuestion={isLastQuestion}
             onSelectNextQuestion={handleSelectNextQuestion}
             onFinishQuiz={handleFinishQuiz}
+          />
+        )}
+        {isFinished && (
+          <FinishScreen
+            points={points}
+            maxPoints={maxPoints}
+            highscore={highscore}
+            onRestartQuiz={handleRestartQuiz}
           />
         )}
       </main>
