@@ -1,12 +1,14 @@
 import Progress from "../Progress";
 import Question from "../Question";
+import Footer from "../Footer";
 
 import type { ProgressProps } from "../Progress";
 import type { QuestionProps } from "../Question";
+import type { FooterProps } from "../Footer";
 
 import "./QuizScreen.styles.css";
 
-export type QuizScreenProps = ProgressProps & QuestionProps;
+export type QuizScreenProps = ProgressProps & QuestionProps & FooterProps;
 
 export default function QuizScreen(props: QuizScreenProps) {
   const {
@@ -17,6 +19,12 @@ export default function QuizScreen(props: QuizScreenProps) {
     points,
     maxPoints,
     onChooseAnswer,
+    secondsRemaining,
+    onDecreaseTimer,
+    hasAnswered,
+    isLastQuestion,
+    onSelectNextQuestion,
+    onFinishQuiz,
   } = props;
 
   return (
@@ -35,7 +43,14 @@ export default function QuizScreen(props: QuizScreenProps) {
         answer={answer}
         onChooseAnswer={onChooseAnswer}
       />
-      <footer className="quiz-screen__footer">Footer</footer>
+      <Footer
+        secondsRemaining={secondsRemaining}
+        onDecreaseTimer={onDecreaseTimer}
+        hasAnswered={hasAnswered}
+        isLastQuestion={isLastQuestion}
+        onSelectNextQuestion={onSelectNextQuestion}
+        onFinishQuiz={onFinishQuiz}
+      />
     </div>
   );
 }

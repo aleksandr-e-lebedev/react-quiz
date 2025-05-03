@@ -4,6 +4,7 @@ import ErrorMessage from "./components/ErrorMessage";
 import StartScreen from "./components/StartScreen";
 import QuizScreen from "./components/QuizScreen";
 
+import { SECONDS_PER_QUESTION } from "./config";
 import { tempQuestions } from "../temp/data";
 
 export default function App() {
@@ -11,6 +12,7 @@ export default function App() {
   const currentQuestionIndex = 0;
   const answer = 1;
   const points = 10;
+  const secondsRemaining = questions.length * SECONDS_PER_QUESTION;
 
   const isLoading = false;
   const isFailed = false;
@@ -19,6 +21,8 @@ export default function App() {
 
   const numQuestions = questions.length;
   const currentQuestion = questions[currentQuestionIndex];
+  const hasAnswered = true;
+  const isLastQuestion = currentQuestionIndex === numQuestions - 1;
 
   const maxPoints = questions.reduce(
     (acc, question) => acc + question.points,
@@ -30,6 +34,18 @@ export default function App() {
   }
 
   function handleChooseAnswer() {
+    return;
+  }
+
+  function handleDecreaseTimer() {
+    return;
+  }
+
+  function handleSelectNextQuestion() {
+    return;
+  }
+
+  function handleFinishQuiz() {
     return;
   }
 
@@ -54,6 +70,12 @@ export default function App() {
             points={points}
             maxPoints={maxPoints}
             onChooseAnswer={handleChooseAnswer}
+            secondsRemaining={secondsRemaining}
+            onDecreaseTimer={handleDecreaseTimer}
+            hasAnswered={hasAnswered}
+            isLastQuestion={isLastQuestion}
+            onSelectNextQuestion={handleSelectNextQuestion}
+            onFinishQuiz={handleFinishQuiz}
           />
         )}
       </main>
