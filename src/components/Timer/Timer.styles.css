@@ -1,0 +1,9 @@
+.timer {
+  padding: 1.35rem 2.8rem;
+
+  border: 2px solid var(--color-dark);
+  border-radius: 100px;
+
+  font-size: 1.8rem;
+  color: var(--color-medium);
+}
