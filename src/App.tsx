@@ -25,20 +25,20 @@ export default function App() {
   const [quizStatus, setQuizStatus] = useState<QuizStatus>("idle");
 
   const currentQuestionIndex = 0;
-  const answer = 1;
-  const points = 10;
+  const answer = null;
+  const points = 0;
   const highscore = 0;
-  const secondsRemaining = questions.length * SECONDS_PER_QUESTION;
+  const [secondsRemaining, setSecondsRemaining] = useState(0);
 
   const isLoading = requestStatus === "pending";
   const isFailed = requestStatus === "failure" && error;
   const isReady = quizStatus === "ready";
-  const isActive = false;
+  const isActive = quizStatus === "active";
   const isFinished = false;
 
   const numQuestions = questions.length;
   const currentQuestion = questions[currentQuestionIndex];
-  const hasAnswered = true;
+  const hasAnswered = false;
   const isLastQuestion = currentQuestionIndex === numQuestions - 1;
 
   const maxPoints = questions.reduce(
@@ -47,7 +47,8 @@ export default function App() {
   );
 
   function handleStartQuiz() {
-    return;
+    setQuizStatus("active");
+    setSecondsRemaining(numQuestions * SECONDS_PER_QUESTION);
   }
 
   function handleChooseAnswer() {
