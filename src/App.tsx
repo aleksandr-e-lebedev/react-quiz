@@ -26,7 +26,7 @@ export default function App() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState<number | null>(null);
   const [points, setPoints] = useState(0);
-  const highscore = 0;
+  const [highscore, setHighscore] = useState(0);
   const [secondsRemaining, setSecondsRemaining] = useState(0);
 
   const isLoading = requestStatus === "pending";
@@ -71,7 +71,8 @@ export default function App() {
   }
 
   function handleFinishQuiz() {
-    return;
+    setQuizStatus("finished");
+    setHighscore(points > highscore ? points : highscore);
   }
 
   function handleRestartQuiz() {
