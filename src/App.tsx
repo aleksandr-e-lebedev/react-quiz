@@ -23,7 +23,7 @@ export default function App() {
   const [error, setError] = useState<Error | null>(null);
 
   const [quizStatus, setQuizStatus] = useState<QuizStatus>("idle");
-  const currentQuestionIndex = 0;
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState<number | null>(null);
   const [points, setPoints] = useState(0);
   const highscore = 0;
@@ -66,7 +66,8 @@ export default function App() {
   }
 
   function handleSelectNextQuestion() {
-    return;
+    setCurrentQuestionIndex(currentQuestionIndex + 1);
+    setAnswer(null);
   }
 
   function handleFinishQuiz() {
