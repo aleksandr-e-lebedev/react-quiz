@@ -23,10 +23,9 @@ export default function App() {
   const [error, setError] = useState<Error | null>(null);
 
   const [quizStatus, setQuizStatus] = useState<QuizStatus>("idle");
-
   const currentQuestionIndex = 0;
-  const answer = null;
-  const points = 0;
+  const [answer, setAnswer] = useState<number | null>(null);
+  const [points, setPoints] = useState(0);
   const highscore = 0;
   const [secondsRemaining, setSecondsRemaining] = useState(0);
 
@@ -38,7 +37,7 @@ export default function App() {
 
   const numQuestions = questions.length;
   const currentQuestion = questions[currentQuestionIndex];
-  const hasAnswered = false;
+  const hasAnswered = answer !== null;
   const isLastQuestion = currentQuestionIndex === numQuestions - 1;
 
   const maxPoints = questions.reduce(
@@ -51,8 +50,12 @@ export default function App() {
     setSecondsRemaining(numQuestions * SECONDS_PER_QUESTION);
   }
 
-  function handleChooseAnswer() {
-    return;
+  function handleChooseAnswer(answer: number) {
+    const question = questions.at(currentQuestionIndex);
+    setAnswer(answer);
+    setPoints(
+      question?.correctOption === answer ? points + question.points : points
+    );
   }
 
   function handleDecreaseTimer() {
