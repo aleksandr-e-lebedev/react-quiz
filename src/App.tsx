@@ -76,7 +76,11 @@ export default function App() {
   }
 
   function handleRestartQuiz() {
-    return;
+    setQuizStatus("active");
+    setCurrentQuestionIndex(0);
+    setAnswer(null);
+    setPoints(0);
+    setSecondsRemaining(numQuestions * SECONDS_PER_QUESTION);
   }
 
   useEffect(() => {
