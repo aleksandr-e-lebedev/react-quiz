@@ -1,4 +1,6 @@
-export const tempQuestions = [
+import type { QuestionType } from "@/types";
+
+export const questions: QuestionType[] = [
   {
     question: "Which is the most popular JavaScript framework?",
     options: ["Angular", "React", "Svelte", "Vue"],
