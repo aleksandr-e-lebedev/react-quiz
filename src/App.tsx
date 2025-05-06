@@ -34,7 +34,7 @@ export default function App() {
   const isFailed = requestStatus === "failure" && error;
   const isReady = quizStatus === "ready";
   const isActive = quizStatus === "active";
-  const isFinished = false;
+  const isFinished = quizStatus === "finished";
 
   const numQuestions = questions.length;
   const currentQuestion = questions[currentQuestionIndex];
@@ -59,6 +59,7 @@ export default function App() {
     const timerIsActive = secondsRemaining !== 0;
     const seconds = timerIsActive ? secondsRemaining - 1_000 : 0;
     setSecondsRemaining(seconds);
+    if (!timerIsActive) setQuizStatus("finished");
   }
 
   function handleSelectNextQuestion() {
