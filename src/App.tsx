@@ -56,7 +56,9 @@ export default function App() {
   }
 
   function handleDecreaseTimer() {
-    return;
+    const timerIsActive = secondsRemaining !== 0;
+    const seconds = timerIsActive ? secondsRemaining - 1_000 : 0;
+    setSecondsRemaining(seconds);
   }
 
   function handleSelectNextQuestion() {
