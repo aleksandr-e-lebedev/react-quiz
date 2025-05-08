@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 
 import Header from "./components/Header";
 import Loader from "./components/Loader";
@@ -17,17 +17,138 @@ import {
 type RequestStatus = "idle" | "pending" | "success" | "failure";
 type QuizStatus = "idle" | "ready" | "active" | "finished";
 
-export default function App() {
-  const [requestStatus, setRequestStatus] = useState<RequestStatus>("idle");
-  const [questions, setQuestions] = useState<QuestionType[]>([]);
-  const [error, setError] = useState<Error | null>(null);
+interface State {
+  requestStatus: RequestStatus;
+  questions: QuestionType[];
+  error: Error | null;
 
-  const [quizStatus, setQuizStatus] = useState<QuizStatus>("idle");
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answer, setAnswer] = useState<number | null>(null);
-  const [points, setPoints] = useState(0);
-  const [highscore, setHighscore] = useState(0);
-  const [secondsRemaining, setSecondsRemaining] = useState(0);
+  quizStatus: QuizStatus;
+  currentQuestionIndex: number;
+  answer: number | null;
+  points: number;
+  highscore: number;
+  secondsRemaining: number;
+}
+
+const initialState: State = {
+  requestStatus: "idle",
+  questions: [],
+  error: null,
+
+  quizStatus: "idle",
+  currentQuestionIndex: 0,
+  answer: null,
+  points: 0,
+  highscore: 0,
+  secondsRemaining: 0,
+};
+
+type Action =
+  | { type: "data_loading" }
+  | { type: "data_received"; payload: QuestionType[] }
+  | { type: "data_failed"; payload: Error }
+  | { type: "quiz_started" }
+  | { type: "answer_chosen"; payload: number }
+  | { type: "next_question_selected" }
+  | { type: "quiz_finished" }
+  | { type: "quiz_restarted" }
+  | { type: "timer_decreased" };
+
+function stateReducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "data_loading": {
+      return {
+        ...state,
+        requestStatus: "pending",
+      };
+    }
+    case "data_received": {
+      return {
+        ...state,
+        requestStatus: "success",
+        questions: action.payload,
+        quizStatus: "ready",
+      };
+    }
+    case "data_failed": {
+      return {
+        ...state,
+        requestStatus: "failure",
+        error: action.payload,
+      };
+    }
+    case "quiz_started": {
+      return {
+        ...state,
+        quizStatus: "active",
+        secondsRemaining: state.questions.length * SECONDS_PER_QUESTION,
+      };
+    }
+    case "answer_chosen": {
+      const question = state.questions.at(state.currentQuestionIndex);
+      const { payload: answer } = action;
+
+      return {
+        ...state,
+        answer,
+        points:
+          question?.correctOption === answer
+            ? state.points + question.points
+            : state.points,
+      };
+    }
+    case "next_question_selected": {
+      return {
+        ...state,
+        currentQuestionIndex: state.currentQuestionIndex + 1,
+        answer: null,
+      };
+    }
+    case "quiz_finished": {
+      return {
+        ...state,
+        quizStatus: "finished",
+        highscore:
+          state.points > state.highscore ? state.points : state.highscore,
+      };
+    }
+    case "quiz_restarted": {
+      return {
+        ...state,
+        quizStatus: "active",
+        currentQuestionIndex: 0,
+        answer: null,
+        points: 0,
+        secondsRemaining: state.questions.length * SECONDS_PER_QUESTION,
+      };
+    }
+    case "timer_decreased": {
+      const timerIsActive = state.secondsRemaining !== 0;
+
+      return {
+        ...state,
+        quizStatus: timerIsActive ? "active" : "finished",
+        secondsRemaining: timerIsActive ? state.secondsRemaining - 1_000 : 0,
+      };
+    }
+    default: {
+      throw new Error(`Unknown action ${action.type}`);
+    }
+  }
+}
+
+export default function App() {
+  const [state, dispatch] = useReducer(stateReducer, initialState);
+
+  const { requestStatus, questions, error } = state;
+  const {
+    quizStatus,
+    currentQuestionIndex,
+    answer,
+    points,
+    highscore,
+    secondsRemaining,
+  } = state;
 
   const isLoading = requestStatus === "pending";
   const isFailed = requestStatus === "failure" && error;
@@ -46,67 +167,50 @@ export default function App() {
   );
 
   function handleStartQuiz() {
-    setQuizStatus("active");
-    setSecondsRemaining(numQuestions * SECONDS_PER_QUESTION);
+    dispatch({ type: "quiz_started" });
   }
 
   function handleChooseAnswer(answer: number) {
-    const question = questions.at(currentQuestionIndex);
-    setAnswer(answer);
-    setPoints(
-      question?.correctOption === answer ? points + question.points : points
-    );
+    dispatch({ type: "answer_chosen", payload: answer });
   }
 
   function handleDecreaseTimer() {
-    const timerIsActive = secondsRemaining !== 0;
-    const seconds = timerIsActive ? secondsRemaining - 1_000 : 0;
-    setSecondsRemaining(seconds);
-    if (!timerIsActive) setQuizStatus("finished");
+    dispatch({ type: "timer_decreased" });
   }
 
   function handleSelectNextQuestion() {
-    setCurrentQuestionIndex(currentQuestionIndex + 1);
-    setAnswer(null);
+    dispatch({ type: "next_question_selected" });
   }
 
   function handleFinishQuiz() {
-    setQuizStatus("finished");
-    setHighscore(points > highscore ? points : highscore);
+    dispatch({ type: "quiz_finished" });
   }
 
   function handleRestartQuiz() {
-    setQuizStatus("active");
-    setCurrentQuestionIndex(0);
-    setAnswer(null);
-    setPoints(0);
-    setSecondsRemaining(numQuestions * SECONDS_PER_QUESTION);
+    dispatch({ type: "quiz_restarted" });
   }
 
   useEffect(() => {
     async function fetchQuestions() {
       try {
-        setRequestStatus("pending");
+        dispatch({ type: "data_loading" });
         const res = await fetch(SERVER_URL);
         if (!res.ok) throw new Error(DEFAULT_ERROR_MESSAGE);
         const data = (await res.json()) as QuestionType[];
-        setQuestions(data);
-        setRequestStatus("success");
+        dispatch({ type: "data_received", payload: data });
       } catch (err) {
-        setRequestStatus("failure");
         if (err instanceof Error) {
-          setError(err);
+          dispatch({ type: "data_failed", payload: err });
         } else {
-          setError(new Error(DEFAULT_ERROR_MESSAGE));
+          dispatch({
+            type: "data_failed",
+            payload: new Error(DEFAULT_ERROR_MESSAGE),
+          });
         }
       }
     }
     void fetchQuestions();
   }, []);
-
-  useEffect(() => {
-    if (questions.length) setQuizStatus("ready");
-  }, [questions]);
 
   return (
     <div className="app">
