@@ -1,16 +1,21 @@
 import Button from "../Button";
+import { useQuiz, useQuizDispatch } from "@/contexts/QuizContext";
 import "./FinishScreen.styles.css";
 
-export interface FinishScreenProps {
-  points: number;
-  maxPoints: number;
-  highscore: number;
-  onRestartQuiz: () => void;
-}
+export default function FinishScreen() {
+  const { questions, points, highscore } = useQuiz();
+  const dispatch = useQuizDispatch();
 
-export default function FinishScreen(props: FinishScreenProps) {
-  const { points, maxPoints, highscore, onRestartQuiz } = props;
+  const maxPoints = questions.reduce(
+    (acc, question) => acc + question.points,
+    0
+  );
+
   const percentage = Math.ceil((points / maxPoints) * 100);
+
+  function handleRestartQuiz() {
+    dispatch({ type: "quiz_restarted" });
+  }
 
   let emoji = "🤦‍♂️";
 
@@ -18,10 +23,6 @@ export default function FinishScreen(props: FinishScreenProps) {
   if (percentage >= 80 && percentage < 100) emoji = "🎉";
   if (percentage >= 50 && percentage < 80) emoji = "🙃";
   if (percentage > 0 && percentage < 50) emoji = "🤨";
-
-  function handleButtonClick() {
-    onRestartQuiz();
-  }
 
   return (
     <div className="finish-screen">
@@ -36,7 +37,7 @@ export default function FinishScreen(props: FinishScreenProps) {
 
       <Button
         className="finish-screen__restart-button"
-        onClick={handleButtonClick}
+        onClick={handleRestartQuiz}
       >
         Restart quiz
       </Button>

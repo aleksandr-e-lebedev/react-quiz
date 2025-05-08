@@ -1,23 +1,18 @@
+import { useQuiz } from "@/contexts/QuizContext";
 import "./Progress.styles.css";
 
 export interface ProgressProps {
   className?: string;
-  answer: number | null;
-  currentQuestionIndex: number;
-  numQuestions: number;
-  points: number;
-  maxPoints: number;
 }
 
-export default function Progress(props: ProgressProps) {
-  const {
-    className,
-    answer,
-    currentQuestionIndex,
-    numQuestions,
-    points,
-    maxPoints,
-  } = props;
+export default function Progress({ className }: ProgressProps) {
+  const { questions, currentQuestionIndex, answer, points } = useQuiz();
+
+  const numQuestions = questions.length;
+  const maxPoints = questions.reduce(
+    (acc, question) => acc + question.points,
+    0
+  );
 
   return (
     <header className={className ? `progress ${className}` : "progress"}>

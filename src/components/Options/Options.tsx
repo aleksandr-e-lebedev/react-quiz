@@ -1,16 +1,17 @@
 import Button from "../Button";
-import type { QuestionType } from "@/types";
+import { useQuiz, useQuizDispatch } from "@/contexts/QuizContext";
 import "./Options.styles.css";
 
-export interface OptionsProps {
-  question: QuestionType;
-  answer: number | null;
-  onChooseAnswer: (answer: number) => void;
-}
+export default function Options() {
+  const { questions, currentQuestionIndex, answer } = useQuiz();
+  const dispatch = useQuizDispatch();
 
-export default function Options(props: OptionsProps) {
-  const { question, answer, onChooseAnswer } = props;
+  const question = questions[currentQuestionIndex];
   const hasAnswered = answer !== null;
+
+  function handleChooseAnswer(answer: number) {
+    dispatch({ type: "answer_chosen", payload: answer });
+  }
 
   function getClassName(optionIndex: number) {
     let className = "";
@@ -37,7 +38,7 @@ export default function Options(props: OptionsProps) {
           className={`options__option ${getClassName(index)}`}
           disabled={hasAnswered}
           onClick={() => {
-            onChooseAnswer(index);
+            handleChooseAnswer(index);
           }}
         >
           {option}

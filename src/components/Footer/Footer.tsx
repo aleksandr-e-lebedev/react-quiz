@@ -1,58 +1,55 @@
 import Timer from "../Timer";
 import Button from "../Button";
 
-import type { TimerProps } from "../Timer";
+import { useQuiz, useQuizDispatch } from "@/contexts/QuizContext";
 import "./Footer.styles.css";
 
-interface NextQuestionButtonProps {
-  onSelectNextQuestion: () => void;
+function NextQuestionButton() {
+  const dispatch = useQuizDispatch();
+
+  function handleSelectNextQuestion() {
+    dispatch({ type: "next_question_selected" });
+  }
+
+  return <Button onClick={handleSelectNextQuestion}>Next</Button>;
 }
 
-function NextQuestionButton(props: NextQuestionButtonProps) {
-  const { onSelectNextQuestion } = props;
-  return <Button onClick={onSelectNextQuestion}>Next</Button>;
+function FinishQuizButton() {
+  const dispatch = useQuizDispatch();
+
+  function handleFinishQuiz() {
+    dispatch({ type: "quiz_finished" });
+  }
+
+  return <Button onClick={handleFinishQuiz}>Finish</Button>;
 }
 
-interface FinishQuizButtonProps {
-  onFinishQuiz: () => void;
-}
-
-function FinishQuizButton(props: FinishQuizButtonProps) {
-  const { onFinishQuiz } = props;
-  return <Button onClick={onFinishQuiz}>Finish</Button>;
-}
-
-export type FooterProps = {
+export interface FooterProps {
   className?: string;
-  hasAnswered: boolean;
-  isLastQuestion: boolean;
-  onSelectNextQuestion: () => void;
-  onFinishQuiz: () => void;
-} & TimerProps;
+}
 
-export default function Footer(props: FooterProps) {
-  const {
-    className,
-    secondsRemaining,
-    onDecreaseTimer,
-    hasAnswered,
-    isLastQuestion,
-    onSelectNextQuestion,
-    onFinishQuiz,
-  } = props;
+export default function Footer({ className }: FooterProps) {
+  const { questions, currentQuestionIndex, answer, secondsRemaining } =
+    useQuiz();
+
+  const dispatch = useQuizDispatch();
+
+  const hasAnswered = answer !== null;
+  const numQuestions = questions.length;
+  const isLastQuestion = currentQuestionIndex === numQuestions - 1;
+
+  function handleDecreaseTimer() {
+    dispatch({ type: "timer_decreased" });
+  }
 
   return (
     <footer className={className ? `footer ${className}` : "footer"}>
       <Timer
         secondsRemaining={secondsRemaining}
-        onDecreaseTimer={onDecreaseTimer}
+        onDecreaseTimer={handleDecreaseTimer}
       />
-      {hasAnswered && !isLastQuestion && (
-        <NextQuestionButton onSelectNextQuestion={onSelectNextQuestion} />
-      )}
-      {hasAnswered && isLastQuestion && (
-        <FinishQuizButton onFinishQuiz={onFinishQuiz} />
-      )}
+      {hasAnswered && !isLastQuestion && <NextQuestionButton />}
+      {hasAnswered && isLastQuestion && <FinishQuizButton />}
     </footer>
   );
 }

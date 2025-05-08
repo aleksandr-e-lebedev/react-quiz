@@ -1,26 +1,19 @@
 import Options from "../Options";
-
-import type { QuestionType } from "@/types";
-import type { OptionsProps } from "../Options";
-
+import { useQuiz } from "@/contexts/QuizContext";
 import "./Question.styles.css";
 
-export type QuestionProps = {
+export interface QuestionProps {
   className?: string;
-  question: QuestionType;
-} & OptionsProps;
+}
 
-export default function Question(props: QuestionProps) {
-  const { className, question, answer, onChooseAnswer } = props;
+export default function Question({ className }: QuestionProps) {
+  const { questions, currentQuestionIndex } = useQuiz();
+  const question = questions[currentQuestionIndex];
 
   return (
     <div className={className ? `question ${className}` : "question"}>
       <h4 className="question__title">{question.question}</h4>
-      <Options
-        question={question}
-        answer={answer}
-        onChooseAnswer={onChooseAnswer}
-      />
+      <Options />
     </div>
   );
 }
