@@ -1,54 +1,36 @@
-# React + TypeScript + Vite
+# The React Quiz
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Версия 1.0.0
 
-Currently, two official plugins are available:
+## Описание
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Данный проект реализован в рамках учебного курса [The Ultimate React Course 2025: React, Next.js, Redux & More](https://www.udemy.com/course/the-ultimate-react-course/) на платформе [Udemy](https://www.udemy.com/) с целью расширения и углубления знаний при работе с [React](https://react.dev/) для создания современных веб-приложений.
 
-## Expanding the ESLint configuration
+Небольшое приложение, представляющее собой квиз по React, для демонстрации того, как работает хук useReducer в React.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Используемые технологии
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+HTML, CSS, JavaScript (ES6+), TypeScript, React, Git, Vite
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Функциональные возможности
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. Обратный отсчет времени, за которое нужно ответить на все вопросы квиза.
+2. Отображение прогресса квиза, номера текущего вопроса и текущего количества баллов за правильные ответы.
+3. Отображение текущего вопроса с несколькими вариантами ответа.
+4. Отображение правильного ответа при выборе ответа.
+5. Отображение итогового количества баллов за пройденный квиз, процента правильных ответов и рекорда за все попытки прохождения квиза.
+6. Возможность перезапустить квиз по его завершении.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Как развернуть проект
+
+1. Клонируйте репозиторий:
+
+   `git clone https://github.com/aleksandr-e-lebedev/react-quiz.git`
+
+2. Для установки необходимых пакетов выполните:
+
+   `npm install`
+
+3. Запуск:
+   - открыть проект в режиме development: `npm run dev`;
+   - собрать проект для production: `npm run build`.

@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Header from "./components/Header";
+import Loader from "./components/Loader";
+import ErrorMessage from "./components/ErrorMessage";
+import StartScreen from "./components/StartScreen";
+import QuizScreen from "./components/QuizScreen";
+import FinishScreen from "./components/FinishScreen";
 
-function App() {
-  const [count, setCount] = useState(0)
+import { useQuiz } from "./contexts/QuizContext";
+
+export default function App() {
+  const { requestStatus, quizStatus } = useQuiz();
+
+  const isLoading = requestStatus === "pending";
+  const isFailed = requestStatus === "failure";
+  const isReady = quizStatus === "ready";
+  const isActive = quizStatus === "active";
+  const isFinished = quizStatus === "finished";
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app">
+      <Header />
+      <main className="app__main">
+        {isLoading && <Loader />}
+        {isFailed && <ErrorMessage />}
+        {isReady && <StartScreen />}
+        {isActive && <QuizScreen />}
+        {isFinished && <FinishScreen />}
+      </main>
+    </div>
+  );
 }
-
-export default App
